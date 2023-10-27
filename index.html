@@ -1,0 +1,114 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Exam Grading System</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="banner">
+            <h1>NEHRU COLLEGE OF ENGINEERING AND RESEARCH CENTRE</h1>
+        </div>
+        <div class="container">
+            <div class="left-panel">
+                <h1>Viewing Panel</h1>
+                <h2>Select a PDF File</h2>
+                <input type="file" accept=".pdf" id="pdfInput">
+                <div class="pdf-viewer">
+                    <object id="pdfObject" data="" type="application/pdf" width="100%" height="600">
+                        If you see this message, it means your browser does not support PDFs. You can download the PDF to view it.
+                    </object>
+                </div>
+            </div>
+            <div class="right-panel">
+                <h2>Grading Panel</h2>
+                <form id="grading-form" action="generate_report.php" method="post">
+                <div class="grading-column">
+                    <h3>Part A</h3>
+                    <ul>
+                        <!-- Part A questions -->
+                        <li>Q01: <input type="number" name="part_a_q1" min="0" max="10"></li>
+                        <li>Q02: <input type="number" name="part_a_q2" min="0" max="10"></li>
+                        <li>Q03: <input type="number" name="part_a_q3" min="0" max="10"></li>
+                        <li>Q04: <input type="number" name="part_a_q4" min="0" max="10"></li>
+                        <li>Q05: <input type="number" name="part_a_q5" min="0" max="10"></li>
+                        <li>Q06: <input type="number" name="part_a_q6" min="0" max="10"></li>
+                        <li>Q07: <input type="number" name="part_a_q7" min="0" max="10"></li>
+                        <li>Q08: <input type="number" name="part_a_q8" min="0" max="10"></li>
+                        <li>Q09: <input type="number" name="part_a_q9" min="0" max="10"></li>
+                        <li>Q10: <input type="number" name="part_a_q10" min="0" max="10"></li>
+                    </ul>
+                </div>
+                <div class="grading-column">
+                    <h3>Part B</h3>
+                    <ul>
+                    <!-- Part B questions -->
+                    <li>Q11(A): <input type="number" name="part_b_q11a" min="0" max="10"></li>          
+                    <li>Q11(B): <input type="number" name="part_b_q11b" min="0" max="10"></li>
+                    <li>Q12(A): <input type="number" name="part_b_q12a" min="0" max="10"></li>
+                    <li>Q12(B): <input type="number" name="part_b_q12b" min="0" max="10"></li>
+                    <li>Q13(A): <input type="number" name="part_b_q13a" min="0" max="10"></li>
+                    <li>Q13(B): <input type="number" name="part_b_q13b" min="0" max="10"></li>
+                    <li>Q14(A): <input type="number" name="part_b_q14a" min="0" max="10"></li>
+                    <li>Q14(B): <input type="number" name="part_b_q14b" min="0" max="10"></li>
+                    <li>Q15(A): <input type="number" name="part_b_q15a" min="0" max="10"></li>
+                    <li>Q15(B): <input type="number" name="part_b_q15b" min="0" max="10"></li>
+                </div>
+                <div class="grading-column" >
+                    <h2>......</h2>
+                    <ul>
+                    <li>Q16(A): <input type="number" name="part_b_q16a" min="0" max="10"></li>
+                    <li>Q16(B): <input type="number" name="part_b_q16b" min="0" max="10"></li>
+                    <li>Q17(A): <input type="number" name="part_b_q17a" min="0" max="10"></li>
+                    <li>Q17(B): <input type="number" name="part_b_q17b" min="0" max="10"></li>
+                    <li>Q18(A): <input type="number" name="part_b_q18a" min="0" max="10"></li>
+                    <li>Q18(B): <input type="number" name="part_b_q18b" min="0" max="10"></li>
+                    <li>Q19(A): <input type="number" name="part_b_q19a" min="0" max="10"></li>
+                    <li>Q19(B): <input type="number" name="part_b_q19b" min="0" max="10"></li>
+                    <li>Q20(A): <input type="number" name="part_b_q20a" min="0" max="10"></li>
+                    <li>Q20(B): <input type="number" name="part_b_q20b" min="0" max="10"></li>
+                    </ul>
+                </div>
+                    <div class="submit-button">
+                        <input class="btn btn-primary" type="submit" value="Submit" id="generate-report">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script>
+        const pdfInput = document.getElementById("pdfInput");
+        const pdfObject = document.getElementById("pdfObject");
+
+        pdfInput.addEventListener("change", function () {
+            const selectedFile = pdfInput.files[0];
+            if (selectedFile) {
+                const objectURL = URL.createObjectURL(selectedFile);
+                pdfObject.data = objectURL;
+            } else {
+                pdfObject.data = ""; // Clear the PDF viewer if no file is selected
+            }
+        });
+
+        document.getElementById('generate-report').addEventListener('click', function() {
+        // Collect data from the form
+        const formData = new FormData(document.getElementById('grading-form'));
+
+        // Create a text document
+        let textDocument = 'Grading Report\n\n';
+        formData.forEach((value, key) => {
+            textDocument += `${key}: ${value}\n`;
+        });
+
+        // Create a Blob and download the text document
+        const blob = new Blob([textDocument], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'grading_report.txt';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+    </script>
+    </html>

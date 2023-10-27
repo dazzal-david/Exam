@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: flex-start;
+}
+
+.left-panel, .right-panel {
+    background-color: #fff;
+    border: 5px solid #ddd;
+    padding: 20px;
+    width: 65%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel h2, .right-panel h2 {
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style: none;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+form ul li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+input[type="number"] {
+    width: 40px;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.banner {
+    background-color: gray;
+    color: #fff; 
+    text-align: center;
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.right-panel {
+    flex: 1; /* Allow the right panel to take available space */
+    padding: 0px; /* Add some padding to the right panel */
+    
+}
+
+.grading-column {
+    box-sizing: border-box; /* Include padding and borders in the width */
+    width: 30%; /* Reduce the grading column width to 40% */
+    float: left; /* Float columns to the left */
+}
+
+.right-panel h2 {
+    text-align: center;
+}
+
+.left-panel h1{
+    text-align: center;
+}
+
+.submit-button {
+    clear: both; /* Clear floating elements to move the button below the grading panel */
+    text-align: center; /* Center the button */
+    padding-top: 10px; /* Add some space above the button */
+}
