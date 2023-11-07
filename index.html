@@ -1,81 +1,585 @@
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Exam Grading System</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="banner">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam Grading System</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="banner">
+        <marquee behavior="scroll" direction="left">
             <h1>NEHRU COLLEGE OF ENGINEERING AND RESEARCH CENTRE</h1>
+        </marquee>
+    </div>
+    <form id="grading-form">
+        <div class="registration-number">
+            <label for="registration">Registration Number : </label>
+            <input type="text" id="registration" name="registration" required>
+            <label for="subjectname">Subject Code : </label>
+            <input type="text" id="subjectcode" name="subjectcode" required>
+            <label for="SUM">Total : </label>
+            <input type="int" id="SUM" name="Total" size="4" min="0" max="150">
+            
         </div>
-        <div class="container">
-            <div class="left-panel">
-                <h1>Viewing Panel</h1>
-                <h2>Select a PDF File</h2>
-                <input type="file" accept=".pdf" id="pdfInput">
-                <div class="pdf-viewer">
-                    <object id="pdfObject" data="" type="application/pdf" width="100%" height="600">
-                        If you see this message, it means your browser does not support PDFs. You can download the PDF to view it.
-                    </object>
-                </div>
+        <div class="submit-button">
+            <input class="btn btn-primary" type="submit" value="Submit" id="generate-report">
+        </div>
+        <!-- Rest of your grading form content -->
+        <!-- ... -->
+        
+    </form>
+    <div class="container">
+        
+        <div class="left-panel">
+            <h2>PDF Upload and Viewer</h2>
+            <script>
+                function loadPDF() {
+                    const pdfInput = document.getElementById("pdfInput");
+                    const pdfObject = document.getElementById("pdfObject");
+                    const selectedFile = pdfInput.files[0];
+                    
+                    if (selectedFile) {
+                        const objectURL = URL.createObjectURL(selectedFile);
+                        pdfObject.data = objectURL;
+                    } else {
+                        pdfObject.data = "";
+                    }
+                }
+            </script>
+            <div class="pdf-viewer">
+                <object id="pdfObject" type="application/pdf" data="" width="100%" height="100%">
+                    If you see this message, it means your browser does not support PDFs. You can download the PDF to view it.
+                </object>
             </div>
-            <div class="right-panel">
-                <h2>Grading Panel</h2>
-                <form id="grading-form" action="generate_report.php" method="post">
+        
+             <label class="file-upload">
+        <input type="file" id="pdfInput" accept=".pdf" onchange="loadPDF()">
+    </label>
+        </div>
+
+        <div class="right-panel">
+            <h2>Grading Panel</h2>
+            <form action="connect.php" method="post" id="grading-form">
                 <div class="grading-column">
                     <h3>Part A</h3>
-                    <ul>
-                        <!-- Part A questions -->
-                        <li>Q01: <input type="number" name="part_a_q1" min="0" max="10"></li>
-                        <li>Q02: <input type="number" name="part_a_q2" min="0" max="10"></li>
-                        <li>Q03: <input type="number" name="part_a_q3" min="0" max="10"></li>
-                        <li>Q04: <input type="number" name="part_a_q4" min="0" max="10"></li>
-                        <li>Q05: <input type="number" name="part_a_q5" min="0" max="10"></li>
-                        <li>Q06: <input type="number" name="part_a_q6" min="0" max="10"></li>
-                        <li>Q07: <input type="number" name="part_a_q7" min="0" max="10"></li>
-                        <li>Q08: <input type="number" name="part_a_q8" min="0" max="10"></li>
-                        <li>Q09: <input type="number" name="part_a_q9" min="0" max="10"></li>
-                        <li>Q10: <input type="number" name="part_a_q10" min="0" max="10"></li>
-                    </ul>
+                   
+                        <ul id="questions-list">
+                            <!-- Part A questions -->
+                        </ul>
+                   
+                    <p id="total" name="total ">Total Marks Part-A: 0</p>
+                
+                    <script>
+                        // Function to calculate the total marks
+                        function calculateTotal() {
+                            const questionInputs = document.querySelectorAll("#questions-list input[type='number']");
+                            let total = 0;
+                
+                            questionInputs.forEach(function (input) {
+                                const questionMark = parseFloat(input.value) || 0;
+                                total += questionMark;
+                            });
+                
+                            // Display the total on the webpage
+                            document.getElementById("total").textContent = "Total Marks Part-A: " + total;
+                        }
+                        // Add questions dynamically to the list
+                        const questionsList = document.getElementById("questions-list");
+                
+                        for (let i = 1; i <= 10; i++) {
+                            const li = document.createElement("li");
+                            li.innerHTML = `Q${i}: <input type="number" name="part_a_q${i}" min="0" max="9">`;
+                            questionsList.appendChild(li);
+                        }
+                        // Attach the calculation function to the "input" event for all input fields
+                        questionsList.addEventListener("input", calculateTotal);
+                
+                        // Initial calculation
+                        calculateTotal();
+                    </script>
                 </div>
                 <div class="grading-column">
                     <h3>Part B</h3>
-                    <ul>
-                    <!-- Part B questions -->
-                    <li>Q11(A): <input type="number" name="part_b_q11a" min="0" max="10"></li>          
-                    <li>Q11(B): <input type="number" name="part_b_q11b" min="0" max="10"></li>
-                    <li>Q12(A): <input type="number" name="part_b_q12a" min="0" max="10"></li>
-                    <li>Q12(B): <input type="number" name="part_b_q12b" min="0" max="10"></li>
-                    <li>Q13(A): <input type="number" name="part_b_q13a" min="0" max="10"></li>
-                    <li>Q13(B): <input type="number" name="part_b_q13b" min="0" max="10"></li>
-                    <li>Q14(A): <input type="number" name="part_b_q14a" min="0" max="10"></li>
-                    <li>Q14(B): <input type="number" name="part_b_q14b" min="0" max="10"></li>
-                    <li>Q15(A): <input type="number" name="part_b_q15a" min="0" max="10"></li>
-                    <li>Q15(B): <input type="number" name="part_b_q15b" min="0" max="10"></li>
+                        <!-- Part B questions -->
+                                <div class="question-set">
+                                    <h6>MODULE 1</h6>
+                                    <input type="radio" id="question11" name="question11" value="11" ID="11">
+                                    <label for="question11">Question 11</label><br>
+                                    <input type="radio" id="question12" name="question11" value="12" ID="12">
+                                    <label for="question12">Question 12</label><br>
+                                    <div id="subQuestions11" class="sub-questions">
+                                
+                                        Q11(A) <input type="number" name="part_b_q11a" min="0" max="10" value="0" id="11A">
+                                        <label for="subOption11A"></label><br>
+                        
+                                        Q11(B) <input type="number" name="part_b_q11ba" min="0" max="10" value="0" id="11B">
+                                        <label for="subOption11B"></label><br>
+                                        <p>Sum: <span id="result11">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input11A = document.getElementById("11A");
+                                            const input11B = document.getElementById("11B");
+                                            
+                                            // Get the result element
+                                            const resultElement11 = document.getElementById("result11");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input11A.addEventListener("input", calculateSum);
+                                            input11B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input11A.value) || 0;
+                                                const valueB = parseFloat(input11B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement11.textContent = sum;
+                                            }
+                                        </script>
+                                        
+                                    </div>
+                        
+                                    <div id="subQuestions12" class="sub-questions">
+                                      
+                                        Q12(A) <input type="number" name="part_b_q12a" min="0" max="10" value="0" id="12A">
+                                        <label for="subOption12A"></label><br>
+                        
+                                        Q12(B) <input type="number" name="part_b_q12b" min="0" max="10" value="0" id="12B">
+                                        <label for="subOption12B"></label><br>
+                                        <p>Sum: <span id="result12">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input12A = document.getElementById("12A");
+                                            const input12B = document.getElementById("12B");
+                                            
+                                            // Get the result element
+                                            const resultElement12 = document.getElementById("result12");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input12A.addEventListener("input", calculateSum);
+                                            input12B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input12A.value) || 0;
+                                                const valueB = parseFloat(input12B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement12.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                        
+                                <div class="question-set">
+                                    <h6>MODULE 2</h6>
+                                    <input type="radio" id="question13" name="question13" value="13" 12="13">
+                                    <label for="question13">Question 13</label><br>
+                        
+                                    <input type="radio" id="question14" name="question13" value="14" ID="14">
+                                    <label for="question14">Question 14</label><br>
+                                    
+                        
+                                    <div id="subQuestions13" class="sub-questions">
+                                        
+                                        Q13(A) <input type="number" name="part_b_q13a" min="0" max="10" value="0" ID="13A">
+                                        <label for="subOption13A"></label><br>
+                        
+                                        Q13(B) <input type="number" name="part_b_q13b" min="0" max="10" value="0" ID="13B">
+                                        <label for="subOption13B"></label><br>
+                                        <p>Sum: <span id="result13">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input13A = document.getElementById("13A");
+                                            const input13B = document.getElementById("13B");
+                                            
+                                            // Get the result element
+                                            const resultElement13 = document.getElementById("result13");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input13A.addEventListener("input", calculateSum);
+                                            input13B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input13A.value) || 0;
+                                                const valueB = parseFloat(input13B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement13.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                        
+                                    <div id="subQuestions14" class="sub-questions">
+                                        
+                                        Q14(A) <input type="number" name="part_b_q14a" min="0" max="10" value="0" ID="14A">
+                                        <label for="subOption14A"></label><br>
+                        
+                                        Q14(B) <input type="number" name="part_b_q14b" min="0" max="10" value="0" ID="14B">
+                                        <label for="subOption14B"></label><br>
+                                        <p>Sum: <span id="result14">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input14A = document.getElementById("14A");
+                                            const input14B = document.getElementById("14B");
+                                            
+                                            // Get the result element
+                                            const resultElement14 = document.getElementById("result14");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input14A.addEventListener("input", calculateSum);
+                                            input14B.addEventListener("input", calculateSum);
+                                    
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input14A.value) || 0;
+                                                const valueB = parseFloat(input14B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement14.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                                </div><body>
+                        
+                                <div class="question-set">
+                                    <h6>MODULE 3</h6>
+                                    <input type="radio" id="question15" name="question14" value="15" ID="15">
+                                    <label for="question15">Question 15</label><br>
+                        
+                                    <input type="radio" id="question16" name="question14" value="16" ID="16">
+                                    <label for="question16">Question 16</label><br>
+                        
+                                    <div id="subQuestions15" class="sub-questions">
+                                       
+                                        Q15(A) <input type="number" name="part_b_q15a" min="0" max="10" value="0" ID="15A">
+                                        <label for="subOption15A"></label><br>
+                        
+                                        Q15(B) <input type="number" name="part_b_q15b" min="0" max="10" value="0" ID="15B">
+                                        <label for="subOption15B"></label><br>
+                                        <p>Sum: <span id="result15">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input15A = document.getElementById("15A");
+                                            const input15B = document.getElementById("15B");
+                                            
+                                            // Get the result element
+                                            const resultElement15 = document.getElementById("result15");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input15A.addEventListener("input", calculateSum);
+                                            input15B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input15A.value) || 0;
+                                                const valueB = parseFloat(input15B.value) || 0;
+                                             
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement15.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                        
+                                    <div id="subQuestions16" class="sub-questions">
+                                       
+                                        Q16(A) <input type="number" name="part_b_q16a" min="0" max="10" value="0" ID="16A">
+                                        <label for="subOption16A"></label><br>
+                        
+                                        Q16(B) <input type="number" name="part_b_q16b" min="0" max="10" value="0" ID="16B">
+                                        <label for="subOption16B"></label><br>
+                                         <p>Sum: <span id="result16">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input16A = document.getElementById("16A");
+                                            const input16B = document.getElementById("16B");
+                                            
+                                            // Get the result element
+                                            const resultElement16 = document.getElementById("result16");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input16A.addEventListener("input", calculateSum);
+                                            input16B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input16A.value) || 0;
+                                                const valueB = parseFloat(input16B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement16.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                        
+                                <div class="question-set">
+                                    <h6>MODULE 4</h6>
+                                    <input type="radio" id="question17" name="question17" value="17" ID="17">
+                                    <label for="question17">Question 17</label><br>
+                        
+                                    <input type="radio" id="question18" name="question17" value="18" ID="18">
+                                    <label for="question18">Question 18</label><br>
+                        
+                                    <div id="subQuestions17" class="sub-questions">
+                                       
+                                        Q17(A) <input type="number" name="part_b_q17a" min="0" max="10" value="0" ID="17A">
+                                        <label for="subOption17A"></label><br>
+                        
+                                        Q17(B) <input type="number" name="part_b_q17b" min="0" max="10" value="0" ID="17B">
+                                        <label for="subOption17B"></label><br>
+                                        <p>Sum: <span id="result17">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input17A = document.getElementById("17A");
+                                            const input17B = document.getElementById("17B");
+                                            
+                                            // Get the result element
+                                            const resultElement17 = document.getElementById("result17");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input17A.addEventListener("input", calculateSum);
+                                            input17B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input16A.value) || 0;
+                                                const valueB = parseFloat(input16B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement17.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                        
+                                    <div id="subQuestions18" class="sub-questions">
+                                        
+                                        Q18(A) <input type="number" name="part_b_q18a" min="0" max="10" value="0" ID="18A">
+                                        <label for="subOption18A"></label><br>
+                        
+                                        Q18(B) <input type="number" name="part_b_q18b" min="0" max="10" value="0" ID="18B">
+                                        <label for="subOption18B"></label><br>
+                                        <p>Sum: <span id="result18">0</span></p>
+
+                                        <script>
+                                            // Get the input elements
+                                            const input18A = document.getElementById("18A");
+                                            const input18B = document.getElementById("18B");
+                                            
+                                            // Get the result element
+                                            const resultElement18 = document.getElementById("result18");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input18A.addEventListener("input", calculateSum);
+                                            input18B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input18A.value) || 0;
+                                                const valueB = parseFloat(input18B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the resul
+                                                resultElement18.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                        
+                                <div class="question-set">
+                                    <h6>MODULE 5</h6>
+                                    <input type="radio" id="question19" name="question" value="19" ID="19">
+                                    <label for="question19">Question 19</label><br>
+                        
+                                    <input type="radio" id="question20" name="question" value="20" ID="20">
+                                    <label for="question20">Question 20</label><br>
+                        
+                                    <div id="subQuestions19" class="sub-questions">
+                                       
+                                        Q19(A) <input type="number" name="part_b_q19a" min="0" max="10" value="0" ID="19A">
+                                        <label for="subOption19A"></label><br>
+                        
+                                        Q19(B) <input type="number" name="part_b_q19b" min="0" max="10" value="0" ID="19B">
+                                        <label for="subOption19B"></label><br>
+                                        <p>Sum: <span id="result19">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input19A = document.getElementById("19A");
+                                            const input19B = document.getElementById("19B");
+                                            
+                                            // Get the result element
+                                            const resultElement19 = document.getElementById("result19");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input19A.addEventListener("input", calculateSum);
+                                            input19B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input19A.value) || 0;
+                                                const valueB = parseFloat(input19B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement19.textContent = sum;
+                                            }
+                                        </script>
+                                    </div>
+                        
+                                    <div id="subQuestions20" class="sub-questions">
+                                        
+                                        Q20(A) <input type="number" name="part_b_q20a" min="0" max="10" value="0" ID="20A">
+                                        <label for="subOption20A"></label><br>
+                        
+                                        Q20(B) <input type="number" name="part_b_q20b" min="0" max="10" value="0" ID="20B">
+                                        <label for="subOption20B"></label><br>
+                                        <p>Sum: <span id="result20">0</span></p>
+                                        <script>
+                                            // Get the input elements
+                                            const input20A = document.getElementById("20A");
+                                            const input20B = document.getElementById("20B");
+                                            
+                                            // Get the result element
+                                            const resultElement20 = document.getElementById("result20");
+                                        
+                                            // Add input event listeners to both input fields
+                                            input20A.addEventListener("input", calculateSum);
+                                            input20B.addEventListener("input", calculateSum);
+                                        
+                                            function calculateSum() {
+                                                // Parse the input values as numbers
+                                                const valueA = parseFloat(input20A.value) || 0;
+                                                const valueB = parseFloat(input20B.value) || 0;
+                                        
+                                                // Calculate the sum
+                                                const sum = valueA + valueB;
+                                        
+                                                // Display the result
+                                                resultElement20.textContent = sum;
+                                            }
+                                            // Get the element by its id
+                                             element = document.getElementById("result20A");
+                                    
+                                            // Access the content of the element
+                                             content = element.innerHTML;
+                                    
+                                            // Display the content
+                                            console.log(content);
+                                        </script>
+                                    </div>
+                                </div>
+                             </form>
+                             <script>
+                                function showSubOptions(questionNumber) {
+                                    const subQuestions = document.querySelectorAll(".sub-questions");
+                                    subQuestions.forEach((subQuestion) => {
+                                        subQuestion.style.display = "none";
+                                    });
+                                    const selectedSubQuestion = document.getElementById(`subQuestions${questionNumber}`);
+                                    selectedSubQuestion.style.display = "block";
+                                }
+                        
+                                // Event listeners for radio buttons
+                                document.getElementById('question11').addEventListener('click', () => {
+                                    showSubOptions(11);
+                                });
+                        
+                                document.getElementById('question12').addEventListener('click', () => {
+                                    showSubOptions(12);
+                                });
+                        
+                                document.getElementById('question13').addEventListener('click', () => {
+                                    showSubOptions(13);
+                                });
+                        
+                                document.getElementById('question14').addEventListener('click', () => {
+                                    showSubOptions(14);
+                                });
+                        
+                                document.getElementById('question15').addEventListener('click', () => {
+                                    showSubOptions(15);
+                                });
+                        
+                                document.getElementById('question16').addEventListener('click', () => {
+                                    showSubOptions(16);
+                                });
+                        
+                                document.getElementById('question17').addEventListener('click', () => {
+                                    showSubOptions(17);
+                                });
+                        
+                                document.getElementById('question18').addEventListener('click', () => {
+                                    showSubOptions(18);
+                                });
+                        
+                                document.getElementById('question19').addEventListener('click', () => {
+                                    showSubOptions(19);
+                                });
+                        
+                                document.getElementById('question20').addEventListener('click', () => {
+                                    showSubOptions(20);
+                                });
+                            </script>
+                            </div>
+                            <!-- Repeat the structure for questions 12 to 20 -->
+                   <p>Total Sum: <span id="totalResult">0</span></p>
+
                 </div>
-                <div class="grading-column" >
-                    <h2>......</h2>
-                    <ul>
-                    <li>Q16(A): <input type="number" name="part_b_q16a" min="0" max="10"></li>
-                    <li>Q16(B): <input type="number" name="part_b_q16b" min="0" max="10"></li>
-                    <li>Q17(A): <input type="number" name="part_b_q17a" min="0" max="10"></li>
-                    <li>Q17(B): <input type="number" name="part_b_q17b" min="0" max="10"></li>
-                    <li>Q18(A): <input type="number" name="part_b_q18a" min="0" max="10"></li>
-                    <li>Q18(B): <input type="number" name="part_b_q18b" min="0" max="10"></li>
-                    <li>Q19(A): <input type="number" name="part_b_q19a" min="0" max="10"></li>
-                    <li>Q19(B): <input type="number" name="part_b_q19b" min="0" max="10"></li>
-                    <li>Q20(A): <input type="number" name="part_b_q20a" min="0" max="10"></li>
-                    <li>Q20(B): <input type="number" name="part_b_q20b" min="0" max="10"></li>
-                    </ul>
-                </div>
-                    <div class="submit-button">
-                        <input class="btn btn-primary" type="submit" value="Submit" id="generate-report">
-                    </div>
-                </form>
-            </div>
+                <script>// Get all the input elements for questions 11 to 20
+                    const inputElements = document.querySelectorAll('input[type="number"]');
+                    
+                    // Get the result element
+                    const totalResultElement = document.getElementById("totalResult");
+                    
+                    // Add input event listeners to all number inputs
+                    inputElements.forEach((input) => {
+                        input.addEventListener("input", calculateTotalSum);
+                    });
+                    
+                    function calculateTotalSum() {
+                        let totalSum = 0;
+                        
+                        // Loop through all the input elements and sum their values
+                        inputElements.forEach((input) => {
+                            const value = parseFloat(input.value) || 0;
+                            totalSum += value;
+                        });
+                    
+                        // Display the total sum
+                        totalResultElement.textContent = totalSum;
+                    }
+                    </script>
+            </form>
         </div>
-    </body>
+    </div>
+
     <script>
         const pdfInput = document.getElementById("pdfInput");
         const pdfObject = document.getElementById("pdfObject");
@@ -91,24 +595,27 @@
         });
 
         document.getElementById('generate-report').addEventListener('click', function() {
-        // Collect data from the form
-        const formData = new FormData(document.getElementById('grading-form'));
+            // Collect data from the form
+            const formData = new FormData(document.getElementById('grading-form'));
 
-        // Create a text document
-        let textDocument = 'Grading Report\n\n';
-        formData.forEach((value, key) => {
-            textDocument += `${key}: ${value}\n`;
+            const registration = formData.get('registration');
+
+            // Create a text document
+            let textDocument = 'Grading Report\n\n';
+            formData.forEach((value, key) => {
+                textDocument += `${key}: ${value}\n`;
+            });
+
+            // Create a Blob and download the text document
+            const blob = new Blob([textDocument], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = window.URL.createObjectURL(blob);
+            a.download = `${registration}.txt`;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         });
-
-        // Create a Blob and download the text document
-        const blob = new Blob([textDocument], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = window.URL.createObjectURL(blob);
-        a.download = 'grading_report.txt';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
     </script>
-    </html>
+</body>
+</html>
